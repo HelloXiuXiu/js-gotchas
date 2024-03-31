@@ -17,15 +17,19 @@ null >= 0   // 0 >= 0 true!
 <br>
 <br>
 
-## 2. Array.length()
+## 2. Math.min() and Math.max()
 
 ```js
-let arr = [1, 2, 3, 4]
-arr.length // 4
+Math.min() // Infinity
+Math.max() // -Infinity
+
+Math.max() > Math.min()  // false
+Math.max() < Math.min()  // true
 ```
 
 <br>
 <br>
+
 
 ## 3. Binary +
 
@@ -69,7 +73,17 @@ From the other hand, execution (and therefore conversion) happenes from left to 
 <br>
 <br>
 
-## 4. 'new' keyword
+## 4. Array.length()
+
+```js
+let arr = [1, 2, 3, 4]
+arr.length // 4
+```
+
+<br>
+<br>
+
+## 5. 'new' keyword
 
 ```js
 const Car = function(color) {
@@ -90,7 +104,7 @@ The danger in accidentally forgetting to include 'new' means that a number of al
 <br>
 <br>
 
-## 5. Array.fill()
+## 6. Array.fill()
 
 Let's create a two-dimentional array using ```new Array``` constractor and ```.fill()``` method.<br>
 The result seems quite satisfying so far.
