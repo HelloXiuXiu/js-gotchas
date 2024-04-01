@@ -42,26 +42,21 @@ Math.max() < Math.min()  // true
 
 [] + []  // ''
 ```
-In JavaScript, the `+` operator has two jobs: <br>
-1. Produce a sum of numeric operands <br>
-2. Concatenate strings <br>
 
-To execute one of these operations, the operands must be converted to `primitive` values. <br>
-Objects are converted to primitives by calling its `[@@toPrimitive]()` → `valueOf()` → `toString()` methods, in that order. <br>
-Note that primitive conversion calls `valueOf()` before `toString()`, which is similar to the behavior of number coercion <br>
-but different from string coercion. If any of the operands is a `string`, then the other one is converted to a `string` too. <br>
-```js
-Number({})   // NaN
-Number([])   // 0
+To execute one of these operations, the operands must be converted to `primitive` values. Objects are converted to primitives by calling
+its `ToPrimitive()` → `valueOf()` → `toString()` methods, in that order. Note that primitive conversion calls `valueOf()` before `toString()`,
+which is similar to the behavior of number coercion but different from string coercion. If any of the operands is a `string`, then the other
+one is converted to a `string` too. <br>
 
-String([])   // ''
-String({})   // '[object Object]'
-```
-The `[@@toPrimitive]()` method, if present, must return a primitive — returning an object results in a TypeError (`'[object Object]'`).<br>
+The `ToPrimitive()` method, if present, must return a primitive — returning an object results in a TypeError (`'[object Object]'`).<br>
 For `valueOf()` and `toString()`, if one returns an object, the return value is ignored and the other's return value is used instead; <br>
 if neither is present, or neither returns a primitive, a TypeError is thrown(`'[object Object]'`). <br>
 
-Neither `{}` nor `[]` have a [@@toPrimitive]() method. Both `{}` and `[]` inherit `valueOf()` from `Object.prototype.valueOf`, which returns the object itself. Since the return value is an object, it is ignored. Therefore, `toString()` is called instead. `{}.toString()` returns `'[object Object]'`, while `[].toString()` returns `''`, so the result is their concatenation: `'[object Object]'`.
+Neither `{}` nor `[]` have a `ToPrimitive()` method. Both `{}` and `[]` inherit `valueOf()` from `Object.prototype.valueOf`, which returns the object itself. Since the return value is an object, it is ignored. Therefore, `toString()` is called instead. `{}.toString()` returns `'[object Object]'`, while `[].toString()` returns `''`, so the result is their concatenation: `'[object Object]'` (first example).
+```js
+String([])   // ''
+String({})   // '[object Object]'
+```
 
 From the other hand, execution (and therefore conversion) happenes from left to right. That's why secuence makes change.
 
@@ -132,9 +127,13 @@ It happened because, in fact, inside of the `.fill()` method we created five cop
 (aka we duplicated pointers/links that are pointing to the same chank of memory <br>
 where our 'real' array is being stored).<br>
 <br>
-To avoide this situation, we can use `.map()` or a classic `for` loop
+To avoide this situation, we can use `.map()` or a classic `for` loop.
 ```js
 const correctArr = Array(5).fill().map(() => Array(5).fill(0))
+```
+Or we can use `Array.from()`.
+```js
+const correctArr =  Array.from({ length: 5 }, () => Array.from({ length: 5 }, () => 0))
 ```
 
 </br>
