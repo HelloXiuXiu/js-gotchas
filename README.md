@@ -43,8 +43,37 @@ When we pass a single argument to the `Math.min()` method, the argument is compa
 <br>
 <br>
 
+## 3. Array.length()
 
-## 3. Coercion
+Let's create an array with four values.
+
+```js
+let arr = [1, 2, 3, 4]
+```
+Now let's use `delete` to remove the second element.
+
+```js
+delete(arr[1])
+```
+And now let's try to check the array length.
+```js
+arr.length  // still 4!
+```
+Actually, `Array.length` shows us not the count of values in the array, but the last element index plus one (even if this element is an empty slot).
+```js
+arr[99] = 'foo'
+arr.length  // 100
+```
+This creates a sparse array with an empty slot.
+```js
+arr  // [1, empty, 3, 4, empty × 95, 'foo']
+```
+So if you want to remove an array element by changing the contents of the array, instead of using `delete()`, use the `splice()` method.
+
+<br>
+<br>
+
+## 4. Coercion
 
 ```js
 {} + []  // '[object Object]'
@@ -78,36 +107,6 @@ From the other hand, execution (and therefore conversion) happenes from left to 
 <br>
 <br>
 
-## 4. Array.length()
-
-Let's create an array with four values.
-
-```js
-let arr = [1, 2, 3, 4]
-```
-Now let's use `delete` to remove the second element.
-
-```js
-delete(arr[1])
-```
-And now let's try to check the array length.
-```js
-arr.length  // still 4!
-```
-Actually, `Array.length` shows us not the count of values in the array, but the last element index plus one (even if this element is an empty slot).
-```js
-arr[99] = 'foo'
-arr.length  // 100
-```
-This creates a sparse array with an empty slot.
-```js
-arr  // [1, empty, 3, 4, empty × 95, 'foo']
-```
-So if you want to remove an array element by changing the contents of the array, instead of using `delete()`, use the `splice()` method.
-
-
-<br>
-<br>
 
 ## 5. 'new' keyword
 
@@ -163,11 +162,11 @@ It happened because, in fact, inside of the `.fill()` method we created five cop
 (aka we duplicated pointers/links that are pointing to the same chank of memory <br>
 where our 'real' array is being stored).<br>
 <br>
-To avoide this situation, we can use `.map()` or a classic `for` loop.
+To avoide this situation, we can use `.map()` or a classic `for` loop
 ```js
 const correctArr = Array(5).fill().map(() => Array(5).fill(0))
 ```
-Or we can use `Array.from()`.
+..or `Array.from()`.
 ```js
 const correctArr =  Array.from({ length: 5 }, () => Array.from({ length: 5 }, () => 0))
 ```
