@@ -1,13 +1,25 @@
 # JS gotchas
 
-## 1. Different types comperison
+There are lots of people out there saying `I hate JavaScript`. The thing that makes them say so is usually connected to the fact that JavaScript is full of so-called 'gotchas'.
+What are these gothcas? Gotchas are 'unexpected' behaviours of some inbuilt functions and methods. The truth is that they are 'unexpected' only from our human logic poin of view. All these behaviuor have an explanation from the language implementations perspective. Yet, it's very easy to get cought into this mental traps, espasially when you still in the middle of the journy of mastering JavaScript.
+
+I'm going to show you 6 of my favourite gotchas, and try to explain what's going on under the hood as mush as the timing allows me, and as much as I know myself.
+
+<br>
+<br>
+
+## 1.Null comperison
+In JavaScript we have `null` which is spacial type of data with only one possible value (`null`). But let's try to compare it to something which is logically very simmilar – to a zero.
+
 
 ```js
 null > 0   // false
 null == 0  // false
 null >= 0  // true!
 ```
-Comparisons (`>`,`>=`,`<`,`<=`) convert operands to numbers (or srtings?) (`null` becomes `0`. On the other hand, the equality check `==` for `undefined` and `null` is defined such that, without any conversions, they equal each other and don’t equal anything else. That’s why `null == 0` is false.
+From the matematical perspective, this behavior doesn't make any sense! If a value is eaqual or grater that 0, one of the first two lines must return `true`. Yet, it's not what happens in JavaScript. 
+
+Comparisons (`>`,`>=`,`<`,`<=`) convert operands to numbers (if they both are not strings), so `null` becomes `0`. On the other hand, the equality check `==` for `undefined` and `null` is defined such that, without any conversions, they equal each other and don’t equal anything else. That’s why `null == 0` is false.
 ```js
 null > 0    // 0 > 0 (false)
 null == 0   // only null and undefined return true
@@ -26,6 +38,7 @@ Math.max() // -Infinity
 Math.max() > Math.min()  // false
 Math.max() < Math.min()  // true
 ```
+When we pass a single argument to the `Math.min()` method, the argument is compared with `Infinity` and the passed value is returned. This is because when we compare any number to `Infinity`, `Infinity` will always be the higher value; so, the number becomes the min value. Therefore with no arguments the method returns `Infinity` as it is.
 
 <br>
 <br>
@@ -53,6 +66,8 @@ For `valueOf()` and `toString()`, if one returns an object, the return value is 
 if neither is present, or neither returns a primitive, a TypeError is thrown(`'[object Object]'`). <br>
 
 Neither `{}` nor `[]` have a `ToPrimitive()` method. Both `{}` and `[]` inherit `valueOf()` from `Object.prototype.valueOf`, which returns the object itself. Since the return value is an object, it is ignored. Therefore, `toString()` is called instead. `{}.toString()` returns `'[object Object]'`, while `[].toString()` returns `''`, so the result is their concatenation: `'[object Object]'` (first example).
+
+Arrays have their own implementation of `toString()` method that returns a comma-separated list of elements.
 ```js
 String([])   // ''
 String({})   // '[object Object]'
@@ -65,10 +80,31 @@ From the other hand, execution (and therefore conversion) happenes from left to 
 
 ## 4. Array.length()
 
+Let's create an array with four values.
+
 ```js
 let arr = [1, 2, 3, 4]
-arr.length // 4
 ```
+Now let's use `delete` to remove the second element.
+
+```js
+delete(arr[1])
+```
+And now let's try to check the array length.
+```js
+arr.length  // still 4!
+```
+Actually, `Array.length` shows us not the count of values in the array, but the last element index plus one (even if this element is an empty slot).
+```js
+arr[99] = 'foo'
+arr.length  // 100
+```
+This creates a sparse array with an empty slot.
+```js
+arr  // [1, empty, 3, 4, empty × 95, 'foo']
+```
+So if you want to remove an array element by changing the contents of the array, instead of using `delete()`, use the `splice()` method.
+
 
 <br>
 <br>
