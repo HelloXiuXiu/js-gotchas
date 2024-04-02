@@ -50,7 +50,7 @@ Let's create an array with four values.
 ```js
 let arr = [1, 2, 3, 4]
 ```
-Now let's use `delete` to remove the second element.
+Now let's try to remove the second element using `delete()`.
 
 ```js
 delete(arr[1])
@@ -68,7 +68,7 @@ This creates a sparse array with an empty slot.
 ```js
 arr  // [1, empty, 3, 4, empty × 95, 'foo']
 ```
-So if you want to remove an array element by changing the contents of the array, instead of using `delete()`, use the `splice()` method.
+So if you want to remove an array element by changing the contents of the array, instead of using `delete()`, that is ment to be used for removing Object properties, use the `splice()` method.
 
 <br>
 <br>
