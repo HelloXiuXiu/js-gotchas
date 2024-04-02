@@ -120,7 +120,7 @@ We can see now that if the object `{}` goes first, the code acts a little wierd.
 ```js
 {} + []  // {} is thrown away, + [] is a numeric conversion Number([]) = 0
 
-{} + {}  // {} is thrown away, Number({}) = NaN or ('[object Object][object Object]' for "before V8" times')
+{} + {}  // {} is thrown away, Number({}) = NaN or ('[object Object][object Object]' for some V8 engine versions')
 ```
 
 So here we simply have the unary addition `+` applied to the operand, which converts an empty array `+ []` to a number `0`, and an empty object to `NaN`.
