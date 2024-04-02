@@ -76,33 +76,41 @@ So if you want to remove an array element by changing the contents of the array,
 ## 4. Coercion
 
 ```js
-{} + []  // '[object Object]'
+[] + {}  // '[object Object]'
 
-[] + {}  // 0
+{} + []  // 0
 
-{} + {}  // NaN  or '[object Object][object Object]' ???
+{} + {}  // NaN
 
 [] + []  // ''
 ```
 
-To execute one of these operations, the operands must be converted to `primitive` values. Objects are converted to primitives by calling
-its `ToPrimitive()` → `valueOf()` → `toString()` methods, in that order. Note that primitive conversion calls `valueOf()` before `toString()`,
-which is similar to the behavior of number coercion but different from string coercion. If any of the operands is a `string`, then the other
-one is converted to a `string` too. <br>
+The binary addition operator `+` either performs string concatenation or numeric addition. There unary `+` converts the operand into a number.
+Let's first try to find out, what type of operations happens on each line.
 
-The `ToPrimitive()` method, if present, must return a primitive — returning an object results in a TypeError (`'[object Object]'`).<br>
-For `valueOf()` and `toString()`, if one returns an object, the return value is ignored and the other's return value is used instead; <br>
-if neither is present, or neither returns a primitive, a TypeError is thrown(`'[object Object]'`). <br>
-
-Neither `{}` nor `[]` have a `ToPrimitive()` method. Both `{}` and `[]` inherit `valueOf()` from `Object.prototype.valueOf`, which returns the object itself. Since the return value is an object, it is ignored. Therefore, `toString()` is called instead. `{}.toString()` returns `'[object Object]'`, while `[].toString()` returns `''`, so the result is their concatenation: `'[object Object]'` (first example).
+To execute one of comands, the operands must be converted to `primitive` values. Objects are converted to primitives by calling its `ToPrimitive()` → `valueOf()` → `toString()` methods, in that order. Neither `{}` nor `[]` have a `ToPrimitive()` method. Both `{}` and `[]` inherit `valueOf()` from `Object.prototype.valueOf`, which returns the object itself. Since the return value is an object, it is ignored. Therefore, `toString()` is called instead. `{}.toString()` returns `'[object Object]'`, while `[].toString()` returns `''`, so the result is their concatenation: `'[object Object]'` (first example).
 
 Arrays have their own implementation of `toString()` method that returns a comma-separated list of elements.
+
 ```js
-String([])   // ''
-String({})   // '[object Object]'
+let arr = []
+let obj = {}
+
+arr.toString()   // ''
+obj.toString()   // '[object Object]'
 ```
 
-From the other hand, execution (and therefore conversion) happenes from left to right. That's why secuence makes change.
+In the first and the last exapmles convert both operands to strings. The second case and the third cases are a bit wierd. The first `{}` is treated there as an empty code block, and therefore just thrown away. So we have unary addition `+` applied to the second operand, which converts an empty array `+ []` to a number `0`, and an empty object to `NaN`.
+
+```js
+[] + {}  // toString() conversion: '' + '[object Object]' = '[object Object]'
+
+{} + []  // {} is thrown away, + [] is a Number() conversion Number([]) = 0
+
+{} + {}  // NaN or ('[object Object][object Object]' for "before V8" times')
+
+[] + []  // toString() conversion: '' + '' = ''
+```
 
 <br>
 <br>
