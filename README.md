@@ -85,10 +85,14 @@ So if you want to remove an array element by changing the contents of the array,
 [] + []  // ''
 ```
 
-The binary addition operator `+` either performs string concatenation or numeric addition. There unary `+` converts the operand into a number.
-Let's first try to find out, what type of operations happens on each line.
+In JavaScript there are two operators that share the same `+` symbol - binary plus and unary plus. The binary addition `+` either performs string concatenation or numeric addition. There unary `+` converts the operand into a number.
 
-To execute one of comands, the operands must be converted to `primitive` values. Objects are converted to primitives by calling its `ToPrimitive()` → `valueOf()` → `toString()` methods, in that order. Neither `{}` nor `[]` have a `ToPrimitive()` method. Both `{}` and `[]` inherit `valueOf()` from `Object.prototype.valueOf`, which returns the object itself. Since the return value is an object, it is ignored. Therefore, `toString()` is called instead. `{}.toString()` returns `'[object Object]'`, while `[].toString()` returns `''`, so the result is their concatenation: `'[object Object]'` (first example).
+Let's first try to find out, which operator was used on each line. <br><br>
+
+
+### 1. Binary `+`
+
+To execute binary addition oparands must be converted either to strings or numbers. Objects are converted to primitives by calling its `ToPrimitive()` → `valueOf()` → `toString()` methods, in that order. Neither `{}` nor `[]` have a `ToPrimitive()` method. Both `{}` and `[]` inherit `valueOf()` from `Object.prototype.valueOf`, which returns the object itself. Since the return value is an object, it is ignored. Therefore, `toString()` is called instead.
 
 Arrays have their own implementation of `toString()` method that returns a comma-separated list of elements.
 
@@ -99,17 +103,30 @@ let obj = {}
 arr.toString()   // ''
 obj.toString()   // '[object Object]'
 ```
-
-In the first and the last exapmles convert both operands to strings. The second case and the third cases are a bit wierd. The first `{}` is treated there as an empty code block, and therefore just thrown away. So we have unary addition `+` applied to the second operand, which converts an empty array `+ []` to a number `0`, and an empty object to `NaN`.
+As a result, we should have string concatanation for all four cases. And it works as it supposed to for the first example and the last one:
 
 ```js
 [] + {}  // toString() conversion: '' + '[object Object]' = '[object Object]'
 
-{} + []  // {} is thrown away, + [] is a Number() conversion Number([]) = 0
-
-{} + {}  // NaN or ('[object Object][object Object]' for "before V8" times')
-
 [] + []  // toString() conversion: '' + '' = ''
+```
+But what happened with the other two?...<br><br>
+
+
+### 2. Unary `+`
+
+We can see now that if the object `{}` goes first, the code acts a little wierd. In fact, the first `{}` is treated there as an empty code block, and therefore just thrown away. 
+
+```js
+{} + []  // {} is thrown away, + [] is a numeric conversion Number([]) = 0
+
+{} + {}  // {} is thrown away, Number({}) = NaN or ('[object Object][object Object]' for "before V8" times')
+```
+
+So here we simply have the unary addition `+` applied to the operand, which converts an empty array `+ []` to a number `0`, and an empty object to `NaN`.
+```js
+Number([])   // 0
+Number({})   // NaN
 ```
 
 <br>
