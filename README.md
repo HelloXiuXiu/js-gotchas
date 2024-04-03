@@ -9,7 +9,7 @@ I'm going to show you 6 of my favourite gotchas, and try to explain what's going
 <br>
 
 ## 1.Null comperison
-In JavaScript we have `null` which is spacial type of data with only one possible value (`null`). But let's try to compare it to something which is logically very simmilar – to a zero.
+In JavaScript we have `null` which is spacial type of data with an only one possible value (`null`). But let's try to compare it to something which is logically very simmilar – to a zero.
 
 
 ```js
@@ -31,6 +31,7 @@ null >= 0   // 0 >= 0 true!
 
 ## 2. Math.min() and Math.max()
 
+If we try to run `Math.min()` and `Math.max()` without providing any argiments, we'll get a quite confusing result:
 ```js
 Math.min() // Infinity
 Math.max() // -Infinity
@@ -55,20 +56,20 @@ Now let's try to remove the second element using `delete()`.
 ```js
 delete(arr[1])
 ```
-And now let's try to check the array length.
+And now let's check the array length.
 ```js
 arr.length  // still 4!
 ```
-Actually, `Array.length` shows us not the count of values in the array, but the last element index plus one (even if this element is an empty slot).
+Actually, `Array.length` shows us not the count of values in the array, but the last element index plus one (even if this element is an empty slot). Another visual proof for that:
 ```js
 arr[99] = 'foo'
 arr.length  // 100
 ```
-This creates a sparse array with an empty slot.
+These actions create a sparse array with an empty slot.
 ```js
 arr  // [1, empty, 3, 4, empty × 95, 'foo']
 ```
-So if you want to remove an array element by changing the contents of the array, instead of using `delete()`, that is ment to be used for removing Object properties, use the `splice()` method.
+So if you want to remove an array element, instead of using `delete()` (that is ment to be used for removing Object properties, not elements of an array) use the `splice()` method. Array methods update the whole array and its length property.
 
 <br>
 <br>
@@ -159,7 +160,7 @@ The danger in accidentally forgetting to include 'new' means that a number of al
 Let's create a two-dimentional array using `new Array` constractor and `.fill()` method.<br>
 The result seems quite satisfying so far.
 ```js
-const arr = Array(5).fill(Array(5).fill(0))
+const arr = new Array(5).fill(new Array(5).fill(0))
 
 //  [
 //    [0, 0, 0, 0, 0],
@@ -169,7 +170,7 @@ const arr = Array(5).fill(Array(5).fill(0))
 //    [0, 0, 0, 0, 0]
 //  ]
 ```
-But now let's try to change a random element to 1.
+But now let's try to change one random element to 1.
 ```js
 arr[2][1] = 1
 
@@ -181,15 +182,13 @@ arr[2][1] = 1
 //    [0, 1, 0, 0, 0]
 //  ]
 ```
-The whole column has changed!!!<br>
-<br>
-It happened because, in fact, inside of the `.fill()` method we created five copies of the same array<br>
-(aka we duplicated pointers/links that are pointing to the same chank of memory <br>
-where our 'real' array is being stored).<br>
-<br>
+The whole column has changed!!!
+
+It happened because, in fact, inside of the `.fill()` method we created five copies of the same array (i.e. we duplicated pointers/links that are pointing to the same chank of memory where our 'real' array is being stored).
+
 To avoide this situation, we can use `.map()` or a classic `for` loop
 ```js
-const correctArr = Array(5).fill().map(() => Array(5).fill(0))
+const correctArr = new Array(5).fill().map(() => new Array(5).fill(0))
 ```
 ..or `Array.from()`.
 ```js
