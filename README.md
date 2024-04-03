@@ -31,7 +31,7 @@ null >= 0   // 0 >= 0 true!
 
 ## 2. Math.min() and Math.max()
 
-If we try to run `Math.min()` and `Math.max()` without providing any arguments, we'll get a quite confusing result:
+If we try to go smart and run `Math.min()` and `Math.max()` without providing any arguments to get an absolute minimum and maximum value, we'll get a quite confusing result:
 ```js
 Math.min() // Infinity
 Math.max() // -Infinity
